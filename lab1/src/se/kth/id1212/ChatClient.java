@@ -1,6 +1,5 @@
 package se.kth.id1212;
 
-import java.awt.print.PrinterGraphics;
 import java.io.*;
 import java.net.Socket;
 
@@ -10,27 +9,69 @@ import java.net.Socket;
  * and one to send messages to the server.
  */
 public class ChatClient {
-    private String serverName;
+    private String serverHost;
     private int serverPort;
 
-    public ChatClient(String serverName, int serverPort){
-        this.serverName = serverName;
+    public ChatClient(String serverHost, int serverPort) {
+        this.serverHost = serverHost;
         this.serverPort = serverPort;
     }
 
     public void execute() {
-        try{
-            Socket socket = new Socket(serverName, serverPort);
+        try {
+            Socket socket = new Socket(serverHost, serverPort);
 
-            System.out.println("Connected to the chat server.");
+            System.out.println("Connected to the chat server at " + serverHost + ":" + serverPort);
 
-            new ReadThread(socket, this).start();
-            new WriteThread(socket, this).start();
+            new Thread(() -> {
+                try {
+                    read(socket);
+                } catch (IOException e) {
+                    // e.printStackTrace();
+                }
+            }).start();
+            new Thread(() -> {
+                try {
+                    write(socket);
+                } catch (IOException e) {
+                    // e.printStackTrace();
+                }
+            }).start();
 
-        }catch (IOException e){
-            //handle the exceptions
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void read(Socket socket) throws IOException {
+        InputStream input = socket.getInputStream();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+        while (true) {
+            String response = reader.readLine();
+            if (response == null) {
+                socket.close();
+                System.out.println("The server is shut down.");
+                System.out.println("You have quit the chat.");
+                System.exit(1);
+            }
+            System.out.println(response);
+        }
+    }
+
+    public void write(Socket socket) throws IOException {
+        PrintStream printer = new PrintStream(socket.getOutputStream());
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        String text = reader.readLine();
+        while (text != null && !text.equalsIgnoreCase("quit")) {
+            if (!text.strip().equals("")) {
+                printer.println(text);
+            }
+            text = reader.readLine();
         }
 
+        socket.close();
+        System.out.println("You have quit the chat.");
+        System.exit(0);
     }
 
     public static void main(String[] args) {
@@ -39,71 +80,4 @@ public class ChatClient {
         ChatClient client = new ChatClient("localhost", port);
         client.execute();
     }
-
-    public class ReadThread extends Thread{
-        private BufferedReader reader;
-        private Socket socket;
-        private ChatClient client;
-
-        public ReadThread(Socket socket, ChatClient client){
-            this.socket = socket;
-            this.client = client;
-
-            try{
-                InputStream input = socket.getInputStream();
-                reader = new BufferedReader(new InputStreamReader(input));
-            }catch (IOException e){
-                //handle the exceptions
-            }
-        }
-        public void run(){
-            while (true){
-                try{
-                    String response = reader.readLine();
-                    System.out.println(response);
-                }catch (IOException e){
-                    //handle the exceptions
-                }
-            }
-        }
-    }
-
-    public class WriteThread extends Thread{
-        private Socket socket;
-        private ChatClient client;
-
-        public WriteThread(Socket socket, ChatClient client){
-            this.socket = socket;
-            this.client = client;
-
-            try{
-                OutputStream output = socket.getOutputStream();
-            }catch (IOException e){
-                //handle the exceptions
-            }
-        }
-        public void run(){
-            PrintStream out = null;
-            try {
-                out = new PrintStream(socket.getOutputStream());
-                BufferedReader indata = new BufferedReader(new InputStreamReader(System.in));
-                String text = indata.readLine();
-                while (!text.equalsIgnoreCase("bye")){
-                    if (!text.strip().equals("")) {
-                        out.println(text);
-                    }
-                    text = indata.readLine();
-                }
-                socket.close();
-                System.out.println("You quit the chat.");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-
-
-
-    
 }

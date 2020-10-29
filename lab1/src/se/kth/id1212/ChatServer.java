@@ -59,7 +59,7 @@ public class ChatServer {
     public class UserThread extends Thread {
         private Socket socket;
         private ChatServer chatServer;
-        private PrintWriter writer;
+        private PrintStream ps;
 
         public UserThread(Socket socket, ChatServer chatServer) {
             this.socket = socket;
@@ -73,7 +73,7 @@ public class ChatServer {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 
                 OutputStream out = socket.getOutputStream();
-                writer = new PrintWriter(out, true);
+                ps = new PrintStream(out);
 
                 String serverMessage;
                 String clientMessage = reader.readLine();
@@ -91,7 +91,7 @@ public class ChatServer {
         }
 
         public void printMessage(String message) {
-            writer.println(message);
+            ps.println(message);
         }
     }
 }
