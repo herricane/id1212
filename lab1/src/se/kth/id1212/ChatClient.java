@@ -25,14 +25,14 @@ public class ChatClient {
 
             new Thread(() -> {
                 try {
-                    read(socket);
+                    printMessage(socket);
                 } catch (IOException e) {
                     // e.printStackTrace();
                 }
             }).start();
             new Thread(() -> {
                 try {
-                    write(socket);
+                    writeMessage(socket);
                 } catch (IOException e) {
                     // e.printStackTrace();
                 }
@@ -43,7 +43,7 @@ public class ChatClient {
         }
     }
 
-    public void read(Socket socket) throws IOException {
+    public void printMessage(Socket socket) throws IOException {
         InputStream input = socket.getInputStream();
         BufferedReader reader = new BufferedReader(new InputStreamReader(input));
         while (true) {
@@ -58,16 +58,28 @@ public class ChatClient {
         }
     }
 
-    public void write(Socket socket) throws IOException {
+    public void writeMessage(Socket socket) throws IOException {
         PrintStream printer = new PrintStream(socket.getOutputStream());
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        String text = reader.readLine();
-        while (text != null && !text.equalsIgnoreCase("quit")) {
+        String text;
+
+//        while (!text.equalsIgnoreCase("quit")) {
+//            if (!text.strip().equals("")) {
+//                printer.println(text);
+//            }
+//            text = reader.readLine();
+//        }
+
+//        socket.close();
+//        System.out.println("You have quit the chat.");
+//        System.exit(0);
+
+        do {
+            text = reader.readLine();
             if (!text.strip().equals("")) {
                 printer.println(text);
             }
-            text = reader.readLine();
-        }
+        } while (!text.equalsIgnoreCase("quit"));
 
         socket.close();
         System.out.println("You have quit the chat.");
