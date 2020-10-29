@@ -50,7 +50,7 @@ public class ChatServer {
     }
 
     public static void main(String[] args) {
-        int port = 3030;
+        int port = 3000;
         ChatServer chatServer = new ChatServer(port);
 
         chatServer.execute();
