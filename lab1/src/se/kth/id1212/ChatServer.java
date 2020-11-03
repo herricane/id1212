@@ -24,6 +24,7 @@ public class ChatServer {
     public void execute() {
         try {
             ServerSocket serverSocket = new ServerSocket(this.port);
+            System.out.println("The chat server has started at port " + port + ".");
 
             while (true) {
                 Socket socket = serverSocket.accept();
@@ -87,6 +88,8 @@ public class ChatServer {
                 chatServer.remove(this);
             } catch (IOException e) {
                 e.printStackTrace();
+            } catch (NullPointerException npe) {
+                System.out.println("A user just quit the chat.");
             }
         }
 

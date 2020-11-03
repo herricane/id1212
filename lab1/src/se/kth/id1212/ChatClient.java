@@ -21,7 +21,8 @@ public class ChatClient {
         try {
             Socket socket = new Socket(serverHost, serverPort);
 
-            System.out.println("Connected to the chat server at " + serverHost + ":" + serverPort);
+            System.out.println("Connected to the chat server at " + serverHost + ":" + serverPort + ".");
+            System.out.println("You are at port " + socket.getLocalPort() + ".");
 
             new Thread(() -> {
                 try {
