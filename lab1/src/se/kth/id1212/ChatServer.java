@@ -48,6 +48,7 @@ public class ChatServer {
 
     public void remove(UserThread user) {
         userThreads.remove(user);
+        System.out.println("A user just quit the chat.");
     }
 
     public static void main(String[] args) {
