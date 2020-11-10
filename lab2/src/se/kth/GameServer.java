@@ -24,9 +24,10 @@ public class GameServer {
                 PrintStream response = new PrintStream(s.getOutputStream());
 
                 String requestLine = request.readLine();
-                String uri = requestLine.split(" ")[1];
-                if (!uri.equals("/favicon.ico")) {
-                    String guessStr = parseGuess(uri);
+                String file = requestLine.split(" ")[1];
+
+                if (file.equals("/") || file.contains("/?guess=")) {
+                    String guessStr = parseGuess(file);
                     String userId = parseId(request);
 
                     try {
@@ -50,7 +51,6 @@ public class GameServer {
                     }
                 }
 
-                s.shutdownInput();
                 s.shutdownOutput();
             }
         } catch (IOException e) {
@@ -85,11 +85,11 @@ public class GameServer {
         response.println(game.errorPage());
     }
 
-    public String parseGuess(String uri) {
+    public String parseGuess(String file) {
         String guess = "-1";
 
-        if (uri.contains("guess")) {
-            String[] pair = uri.split("=");
+        if (file.contains("guess")) {
+            String[] pair = file.split("=");
             if (pair.length > 1) {
                 guess = pair[1];
             }
@@ -102,11 +102,10 @@ public class GameServer {
 
         String str = null;
         try {
-            do {
-                str = request.readLine();
-            } while (str != null && !str.contains("Cookie"));
-            if (str != null) {
-                userId = str.split("userId=")[1].substring(0, 36);
+            while ((str = request.readLine()) != null && str.length() > 0) {
+                if (str.contains("userId=")) {
+                    userId = str.split("userId=")[1].substring(0, 36);
+                }
             }
         } catch (ArrayIndexOutOfBoundsException | IOException e) {
             System.out.println(e);
