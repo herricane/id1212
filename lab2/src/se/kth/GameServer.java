@@ -58,8 +58,8 @@ public class GameServer {
         }
     }
 
-    public void writeHeaders(PrintStream response, GuessGame game) {
-        response.println("HTTP/1.1 200 OK");
+    public void writeHeaders(PrintStream response, GuessGame game, int status) {
+        response.println("HTTP/1.1 " + status + (status == 200 ? "OK" : "Not Found"));
         response.println("Server: Trash 0.1 Beta");
         response.println("Content-Type: text/html");
         response.println("Set-Cookie: userId=" + game.getId());
@@ -67,17 +67,17 @@ public class GameServer {
     }
 
     public void initResponse(PrintStream response, GuessGame game) {
-        writeHeaders(response, game);
+        writeHeaders(response, game, 200);
         response.println(game.initPage());
     }
 
     public void guessResponse(PrintStream response, GuessGame game, int guess) {
-        writeHeaders(response, game);
+        writeHeaders(response, game, 200);
         response.println(game.guessPage(guess));
     }
 
     public void errorResponse(PrintStream response, GuessGame game) {
-        writeHeaders(response, game);
+        writeHeaders(response, game, 404);
         response.println(game.errorPage());
     }
 
