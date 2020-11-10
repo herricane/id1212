@@ -34,8 +34,8 @@ public class GameServer {
                         if (userId.equals("0") || guess == -1) {
                             String uid = UUID.randomUUID().toString();
                             GuessGame game = new GuessGame(uid);
-                            initResponse(response, game);
                             this.games.put(uid, game);
+                            initResponse(response, game);
                         } else {
                             GuessGame game = this.games.get(userId);
                             if (guess < 1 || guess > 100) {
