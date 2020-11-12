@@ -1,4 +1,4 @@
-package se.kth.id1212;
+package se.kth;
 
 import java.io.*;
 import java.net.Socket;
