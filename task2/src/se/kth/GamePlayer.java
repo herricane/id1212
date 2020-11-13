@@ -3,75 +3,96 @@ package se.kth;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.HttpURLConnection;
 
 public class GamePlayer {
-    private int times;
-    private URL url;
+    private int trials = 100;
+    private String host = "http://localhost:8090/";
 
-    public GamePlayer(int times) {
-        this.times = times;
-        try {
-            this.url = new URL("http", "127.0.0.1", 8090, "/");
-        } catch (MalformedURLException e) {
-            System.out.println(e.getMessage());
-        }
+    public GamePlayer(int trials) {
+        this.trials = trials;
     }
 
-    public int guessTimes() {
-        HttpURLConnection con = null;
-        try {
-            con = (HttpURLConnection) url.openConnection();
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
-        con.setRequestProperty("Accept", "text/html");
-        con.setRequestProperty("Cache-Control", "max-age=0");
-        con.setRequestProperty("Connection", "keep-alive");
+    private HttpURLConnection getConnection(String location) throws IOException {
+        URL url = new URL(this.host + location);
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestProperty("User-Agent","Mozilla/5.0");
 
+        return con;
+    }
+
+    private String getResponseBody(HttpURLConnection con) {
+        String responseBody = "";
         try {
             con.connect();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            responseBody = reader.readLine();
+            con.disconnect();
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
+        return responseBody;
+    }
 
-        BufferedReader reader = null;
-        try{
-            reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+    public String getCookie() {
+        String cookie = "";
+        try {
+            HttpURLConnection con = getConnection("");
+            con.connect();
+            cookie = con.getHeaderField("Set-Cookie");
+            con.disconnect();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        catch(IOException e){
-            System.out.println(e.getMessage());
-        }
+        return cookie;
+    }
 
-        String row;
-        try{
-            while( (row=reader.readLine()) != null){
-                System.out.println(row);
+    private int getResult(int guess, String cookie) {
+        try {
+            HttpURLConnection con = getConnection("?guess=" + guess);
+            con.setRequestProperty("Cookie", cookie);
+            String responseBody = getResponseBody(con);
+            if (responseBody.contains("higher")) {
+                return -1;
+            } else if (responseBody.contains("lower")) {
+                return 1;
+            } else {
+                return 0;
             }
-        }
-        catch(IOException e){
-            System.out.println("#5 " + e.getMessage());
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
-        System.out.println(con.getHeaderField("Cookie"));
+        return -1;
+    }
 
-        return 0;
+    public int guessTimes(int low, int high, String cookie) {
+        int count = 1;
+        int guess = (low + high) / 2;
+
+        int result = getResult(guess, cookie);
+        if (result == 1) {
+            count += guessTimes(low, guess - 1, cookie);
+        } else if (result == -1) {
+            count += guessTimes(guess + 1, high, cookie);
+        }
+
+        return count;
     }
 
     public static void main(String[] args) {
         GamePlayer gp = new GamePlayer(100);
-//        float avg = 0;
-//
-//        for (int i = 0; i < gp.times; i++) {
-//            int count = gp.guessTimes();
-//            avg += count;
-//        }
-//
-//        avg /= gp.times;
-//        System.out.println(avg);
-        gp.guessTimes();
+        double avg = 0;
+
+        for (int i = 0; i < gp.trials; i++) {
+            String cookie = gp.getCookie();
+            int times = gp.guessTimes(1, 100, cookie);
+            System.out.println(times);
+            avg += times;
+        }
+        avg /= gp.trials;
+
+        System.out.println(avg);
     }
 }
