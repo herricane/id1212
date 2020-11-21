@@ -1,9 +1,9 @@
 package se.kth.servlet;
 
+import se.kth.bean.QuestionsEntity;
 import se.kth.bean.UsersEntity;
 
 import javax.persistence.*;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -41,6 +41,9 @@ public class LoginServlet extends HttpServlet {
                 req.getSession().setAttribute("admin", user);
                 resp.sendRedirect("admin.jsp");
             } else {
+                Query selectAll = entityManager.createQuery("SELECT q FROM QuestionsEntity q");
+                List<QuestionsEntity> questions = selectAll.getResultList();
+                req.getSession().setAttribute("questions", questions);
                 req.getSession().setAttribute("user", user);
                 resp.sendRedirect("quiz.jsp");
             }

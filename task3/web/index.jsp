@@ -21,6 +21,8 @@
       alert("Wrong username or password!")
     } else if (errorInfo === '2') {
       alert("You are not an admin!")
+    } else if (errorInfo === '3') {
+      alert("Please login first!")
     }
   </script>
 </body>
