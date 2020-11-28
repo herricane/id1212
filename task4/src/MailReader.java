@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 
-public class ReadMail {
+public class MailReader {
     private static DataOutputStream dataOutStream;
 
     public static void main(String[] args) throws Exception {
