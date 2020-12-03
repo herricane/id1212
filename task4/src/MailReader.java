@@ -29,9 +29,7 @@ public class MailReader {
 
         final BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
-        (new Thread(new Runnable() {
-            @Override
-            public void run() {
+        new Thread(() -> {
                 String line;
 
                 try {
@@ -40,8 +38,8 @@ public class MailReader {
                 } catch (IOException e){
                     e.printStackTrace();
                 }
-            }
-        })).start();
+
+        }).start();
 
         dataOutStream = new DataOutputStream(socket.getOutputStream());
 
