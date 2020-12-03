@@ -49,7 +49,7 @@ public class MailReader {
         Thread.sleep(delay);
         send("A1 select inbox\r\n");
         Thread.sleep(delay);
-        send("A1 fetch 612 all\r\n");
+        send("A1 fetch 617 all\r\n");
 
     }
 
