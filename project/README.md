@@ -6,8 +6,8 @@ Base URL: `http://localhost:xxxx/api`
 
 | METHOD | ENDPOINT                  | USAGE                         | RETURNS     |
 | ------ | ------------------------- | ----------------------------- | ----------- |
-| POST   | /register                 | Register a new user           | -           |
-| POST   | /login                    | Log in                        | -           |
+| POST   | /register                 | Register a new user           | response    |
+| POST   | /login                    | Log in                        | response    |
 | GET    | /users/{user_id}          | Get a user                    | user        |
 | GET    | /users/{user_id}/username | Get a user's username         | username    |
 | GET    | /user/{user_id}/issues    | Get a list of a user's issues | issues      |
