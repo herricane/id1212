@@ -26,6 +26,6 @@ public class UserController {
 
     @PostMapping("/{id}/issues")
     public Issue postIssueByUserId(@PathVariable int id, @RequestBody Issue issue) {
-        return userService.addIssueByUserId(id,issue);
+        return userService.addIssueByUserId(id, issue);
     }
 }

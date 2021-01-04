@@ -24,7 +24,7 @@ public class IssueController {
     }
 
     @PutMapping("/{id}")
-    public Issue putIssueById(@PathVariable int id, @RequestBody Issue issue) {
+    public Issue modifyIssueById(@PathVariable int id, @RequestBody Issue issue) {
         issueService.updateById(id, issue);
         return issueService.findById(id);
     }

@@ -12,7 +12,6 @@ import java.sql.Timestamp;
 
 @Data
 @NoArgsConstructor
-@RequiredArgsConstructor
 @Entity
 public class Issue {
     @Id
@@ -29,7 +28,7 @@ public class Issue {
     @Enumerated(EnumType.STRING)
     private IssueStatus status;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH})
     @JoinColumn(name="user_id")
     @JsonBackReference
     private User user;
