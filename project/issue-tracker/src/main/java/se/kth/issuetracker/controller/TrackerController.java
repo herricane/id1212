@@ -2,10 +2,7 @@ package se.kth.issuetracker.controller;
 
 import com.sun.xml.txw2.output.ResultFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import se.kth.issuetracker.entity.User;
 import se.kth.issuetracker.response.Response;
 import se.kth.issuetracker.response.ResponseFactory;
@@ -17,6 +14,7 @@ public class TrackerController {
     @Autowired
     private TrackerService trackerService;
 
+    @CrossOrigin
     @PostMapping("/register")
     public Response register(@RequestBody User user) {
         boolean isNew = trackerService.addUser(user);
@@ -27,6 +25,7 @@ public class TrackerController {
         }
     }
 
+    @CrossOrigin
     @PostMapping("/login")
     public Response login(@RequestBody User requestUser) {
         String username = requestUser.getUsername();

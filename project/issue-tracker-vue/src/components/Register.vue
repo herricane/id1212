@@ -8,12 +8,14 @@
         </div>
         <v-card class="mt-5 mx-a">
           <v-card-text>
-            <v-form>
+            <v-form :model="registerForm">
               <v-text-field
+                  v-model="registerForm.username"
                   label="Username"
                   prepend-icon="mdi-account-circle"
               />
               <v-text-field
+                  v-model="registerForm.password"
                   :type="showPassword ? 'text' : 'password'"
                   label="Password"
                   prepend-icon="mdi-lock"
@@ -68,6 +70,8 @@ export default {
               _this.$store.commit('register', _this.registerForm)
               var path = this.$route.query.redirect
               this.$router.replace({path: path === '/' || path === undefined ? '/index' : path})
+            } else {
+              alert("Something went wrong... Try again.")
             }
           })
       // .catch(failResponse => {

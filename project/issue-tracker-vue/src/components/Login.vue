@@ -59,12 +59,14 @@
         </div>
         <v-card class="mt-5 mx-a">
           <v-card-text>
-            <v-form>
-              <v-text-field
+            <v-form :model="loginForm">
+              <v-text-field 
+                  v-model="loginForm.username"
                   label="Username"
                   prepend-icon="mdi-account-circle"
               />
               <v-text-field
+                  v-model="loginForm.password"
                   :type="showPassword ? 'text' : 'password'"
                   label="Password"
                   prepend-icon="mdi-lock"
@@ -119,6 +121,8 @@ export default {
               _this.$store.commit('login', _this.loginForm)
               var path = this.$route.query.redirect
               this.$router.replace({path: path === '/' || path === undefined ? '/index' : path})
+            } else {
+              alert("Something went wrong... Try again.")
             }
           })
       // .catch(failResponse => {

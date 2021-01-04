@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-// import AppIndex from '@/component/home/AppIndex'
 import Login from '@/components/Login'
 import Index from '@/components/Index'
 import Register from '@/components/Register'
@@ -27,6 +26,12 @@ export default new VueRouter({
       path: '/register',
       name: 'Register',
       component: Register
+    },
+    {
+      path: '/',
+      redirect: {
+        name: 'Index'
+      }
     }
   ]
 })
