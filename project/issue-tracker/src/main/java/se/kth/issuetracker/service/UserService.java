@@ -30,4 +30,8 @@ public class UserService {
         issue.setUser(user);
         return issueRepository.save(issue);
     }
+
+    public List<User> findAll() {
+        return userRepository.findAll();
+    }
 }

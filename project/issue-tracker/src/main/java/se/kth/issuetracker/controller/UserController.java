@@ -8,6 +8,7 @@ import se.kth.issuetracker.service.UserService;
 
 import java.util.List;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
@@ -27,5 +28,10 @@ public class UserController {
     @PostMapping("/{id}/issues")
     public Issue postIssueByUserId(@PathVariable int id, @RequestBody Issue issue) {
         return userService.addIssueByUserId(id, issue);
+    }
+
+    @GetMapping("")
+    public List<User> getAllUsers() {
+        return userService.findAll();
     }
 }

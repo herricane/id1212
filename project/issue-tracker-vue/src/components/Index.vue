@@ -19,7 +19,8 @@
               <v-container :model="issueForm">
                 <v-text-field label="Title" required v-model="issueForm.title" color=teal></v-text-field>
                 <v-textarea label="Description" required v-model="issueForm.description" color=teal></v-textarea>
-                <v-text-field label="Assign to" required v-model="issueForm.user" color=teal></v-text-field>
+                <!-- <v-text-field label="Assign to" required v-model="issueForm.user" color=teal></v-text-field> -->
+                <v-select :items="users" item-text="username" item-value="id" label="Assign to" @click=getAllUsers required v-model="issueForm.user"></v-select>
                 <span class="header">Select status</span>
                 <v-chip-group v-model="issueForm.status" active-class="teal--text text--darken-2" mandatory>
                   <v-chip
@@ -99,7 +100,7 @@
 <script>
 export default {
   name: "Index",
-  data: function() {
+  data() {
     return {
       drawer: null,
       dialog: null,
@@ -110,28 +111,37 @@ export default {
         user: '',
         status: ''
       },
-      statusOption: ['TODO', 'IN_PROGRESS', 'DONE']
+      statusOption: ['TODO', 'IN_PROGRESS', 'DONE'],
+      users: [],
+      username: null,
+      id: null
     }
   },
   methods: {
     closeDialog: function () {
       this.dialog = false
     },
-    add () {
-      var _this = this
+    add() {
+      // var _this = this
       console.log(this.$store.state)
       this.$axios
-          .post('/user/', {
+          .post('/users/' + this.issueForm.user + '/issues', {
             title: this.issueForm.title,
             description: this.issueForm.description,
-            user: this.issueForm.user,
             status: this.issueForm.status
           })
-      .then(successResponse => {
-        _this.store.commit('issue', _this.loginForm)
-        _this.$emit('issueAdded')
-      })
-    }
+      // .then(successResponse => {
+      //   _this.store.commit('issue', _this.loginForm)
+      //   _this.$emit('issueAdded')
+      // })
+    },
+    getAllUsers() {
+      this.$axios
+        .get('/users')
+        .then(response => {
+          this.users = response.data
+        })
+    },
   }
 }
 
