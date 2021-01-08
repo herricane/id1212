@@ -23,20 +23,19 @@
         color="teal darken-1"
         width="100"
     >
-      <v-row>
-        <v-col align="center">
-          <v-avatar color="white" size="55">
-            <v-icon
-                color="teal darken-1"
-            >
-              mdi-account-circle
-            </v-icon>
-          </v-avatar>
-        </v-col>
-      </v-row>
+      
+      <div align="center" class="pa-4">
+        <v-avatar color="white" size="55">
+          <v-icon
+              color="teal darken-1"
+          >
+            mdi-account-circle
+          </v-icon>
+        </v-avatar>
+      </div>
 
-      <v-row>
-        <v-col align="center">
+      <template v-slot:append>
+        <div align="center" class="pa-4">
           <v-btn
               fab
               dark
@@ -48,9 +47,8 @@
               mdi-plus
             </v-icon>
           </v-btn>
-        </v-col>
-      </v-row>
-
+        </div>
+      </template>
 
     </v-navigation-drawer>
 
