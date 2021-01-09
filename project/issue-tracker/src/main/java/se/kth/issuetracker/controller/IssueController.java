@@ -7,6 +7,7 @@ import se.kth.issuetracker.service.IssueService;
 
 import java.util.List;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api/issues")
 public class IssueController {

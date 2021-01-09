@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import se.kth.issuetracker.entity.Issue;
 import se.kth.issuetracker.entity.IssueStatus;
+import se.kth.issuetracker.entity.User;
 
 import java.util.List;
 
@@ -17,7 +18,8 @@ public interface IssueRepository extends JpaRepository<Issue, Integer> {
     @Modifying(clearAutomatically = true)
     @Query("UPDATE Issue i SET i.title = :title, " +
             "i.description = :description, " +
-            "i.status = :status WHERE i.id = :id")
+            "i.status = :status " +
+            "WHERE i.id = :id")
     void updateById(@Param("id") int id,
                     @Param("title") String title,
                     @Param("description") String description,

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import se.kth.issuetracker.entity.Issue;
 import se.kth.issuetracker.entity.IssueStatus;
+import se.kth.issuetracker.entity.User;
 import se.kth.issuetracker.repository.IssueRepository;
 
 import java.util.List;
