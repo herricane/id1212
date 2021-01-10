@@ -7,6 +7,7 @@ import se.kth.issuetracker.entity.Issue;
 import se.kth.issuetracker.entity.IssueStatus;
 import se.kth.issuetracker.entity.User;
 import se.kth.issuetracker.repository.IssueRepository;
+import se.kth.issuetracker.repository.UserRepository;
 
 import java.util.List;
 
@@ -14,6 +15,9 @@ import java.util.List;
 public class IssueService {
     @Autowired
     private IssueRepository issueRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     public List<Issue> findAll() {
         return issueRepository.findAll();
@@ -34,5 +38,11 @@ public class IssueService {
     @Transactional
     public void deleteById(int id) {
         issueRepository.deleteById(id);
+    }
+
+    @Transactional
+    public void updateUserById(int id, int userId) {
+        User user = userRepository.findById(userId);
+        issueRepository.updateUserById(id, user);
     }
 }

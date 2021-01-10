@@ -35,4 +35,10 @@ public class IssueController {
         issueService.deleteById(id);
         return issueService.findAll();
     }
+
+    @PutMapping("/{id}/{userId}")
+    public Issue modifyAssignedUser(@PathVariable int id, @PathVariable int userId) {
+        issueService.updateUserById(id, userId);
+        return issueService.findById(id);
+    }
 }

@@ -66,14 +66,7 @@
             <v-card-actions>
               <v-spacer></v-spacer>
 
-              <v-btn
-                color="teal darken-1"
-                text
-                @click="dialog = false"
-                v-on:click="add"
-              >
-                Add
-              </v-btn>
+              <v-btn color="teal darken-1" text v-on:click="add"> Add </v-btn>
               <v-btn color="teal darken-1" text @click="dialog = false">
                 Close
               </v-btn>
@@ -92,24 +85,26 @@
     </v-navigation-drawer>
 
     <v-main class="pa-0">
-      <v-snackbar v-model="snackbar" :timeout="4000" top color="success">
-        <span>Awesome! You added a new issue.</span>
-        <v-btn depressed color="transparent" @click="snackbar = false"
-          >Close</v-btn
-        >
-      </v-snackbar>
-
       <v-container>
+        <v-snackbar v-model="snackbar" :timeout="4000" top color="success">
+          <span>Awesome! You added a new issue.</span>
+          <v-btn depressed color="transparent" @click="snackbar = false">
+            Close
+          </v-btn>
+        </v-snackbar>
+
         <v-row>
           <h1 class="teal--text text--darken-4 pl-4">Board</h1>
         </v-row>
 
         <v-row justify="center">
-          <v-col cols="6">
+          <v-col cols="12">
             <v-card v-for="(issue, i) in issues" :key="i" class="ma-4">
               <v-card-title v-text="issue.title"></v-card-title>
               <v-card-subtitle v-text="issue.timestamp"></v-card-subtitle>
               <v-card-text>
+                <!-- <div v-text="issue.id"></div>
+                <br /> -->
                 <div v-text="issue.description"></div>
                 <br />
                 <div>Assign to: <span v-text="issue.user.username"></span></div>
@@ -119,7 +114,7 @@
                 <v-spacer></v-spacer>
                 <!-- <v-btn color="teal darken-1" text>Modify</v-btn> -->
 
-                <v-dialog v-model="dialog1" width="500">
+                <v-dialog v-model="modifyDialog[i]" width="500">
                   <template v-slot:activator="{ on }">
                     <v-btn color="teal darken-1" text v-on="on">Modify</v-btn>
                   </template>
@@ -143,6 +138,15 @@
                           v-model="modifyForm.description"
                           color="teal"
                         ></v-textarea>
+                        <v-select
+                          :items="users"
+                          item-text="username"
+                          item-value="id"
+                          label="Assign to"
+                          @click="getAllUsers"
+                          required
+                          v-model="modifyForm.user"
+                        ></v-select>
                         <span class="header">Select status</span>
                         <v-chip-group
                           v-model="modifyForm.status"
@@ -167,7 +171,6 @@
                       <v-btn
                         color="teal darken-1"
                         text
-                        @click="dialog1 = false"
                         v-on:click="modify(issue.id)"
                       >
                         Modify
@@ -175,7 +178,7 @@
                       <v-btn
                         color="teal darken-1"
                         text
-                        @click="dialog1 = false"
+                        @click="modifyDialog = false"
                       >
                         Close
                       </v-btn>
@@ -183,7 +186,9 @@
                   </v-card>
                 </v-dialog>
 
-                <v-btn color="red" text v-on:click="del(issue.id)">Delete</v-btn>
+                <v-btn color="red" text v-on:click="del(issue.id)"
+                  >Delete</v-btn
+                >
               </v-card-actions>
             </v-card>
           </v-col>
@@ -200,8 +205,8 @@ export default {
     return {
       drawer: null,
       dialog: null,
-      dialog1: null,
-      snackbar: false,
+      modifyDialog: [],
+      snackbar: true,
       issueForm: {
         title: "",
         description: "",
@@ -226,17 +231,18 @@ export default {
   },
   methods: {
     add() {
-      // var _this = this
+      var _this = this;
       console.log(this.$store.state);
-      this.$axios.post("/users/" + this.issueForm.user + "/issues", {
-        title: this.issueForm.title,
-        description: this.issueForm.description,
-        status: this.issueForm.status,
-      })
-      // .then(successResponse => {
-      //   _this.store.commit('issue', _this.loginForm)
-      //   _this.$emit('issueAdded')
-      // })
+      this.$axios
+        .post("/users/" + this.issueForm.user + "/issues", {
+          title: this.issueForm.title,
+          description: this.issueForm.description,
+          status: this.issueForm.status,
+        })
+        .then(() => {
+          _this.$emit("issueAdded");
+        });
+      location.reload();
     },
     modify(id) {
       this.$axios.put("/issues/" + id, {
@@ -244,10 +250,11 @@ export default {
         description: this.modifyForm.description,
         status: this.modifyForm.status,
       });
+      this.$axios.put(`/issues/${id}/${this.modifyForm.user}`);
+      location.reload();
     },
     del(id) {
-      this.$axios.delete("/issues/" + id)
-        .then(location.reload())
+      this.$axios.delete("/issues/" + id).then(location.reload());
     },
     getAllUsers() {
       this.$axios.get("/users").then((response) => {

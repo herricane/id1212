@@ -18,7 +18,8 @@ public interface IssueRepository extends JpaRepository<Issue, Integer> {
     @Modifying(clearAutomatically = true)
     @Query("UPDATE Issue i SET i.title = :title, " +
             "i.description = :description, " +
-            "i.status = :status " +
+            "i.status = :status, " +
+            "i.timestamp = CURRENT_TIMESTAMP " +
             "WHERE i.id = :id")
     void updateById(@Param("id") int id,
                     @Param("title") String title,
@@ -27,4 +28,8 @@ public interface IssueRepository extends JpaRepository<Issue, Integer> {
 
     @Modifying(clearAutomatically = true)
     void deleteById(int id);
+
+    @Modifying(clearAutomatically = true)
+    @Query("UPDATE Issue i SET i.user = :user WHERE i.id = :id")
+    void updateUserById(@Param("id") int id, @Param("user") User user);
 }

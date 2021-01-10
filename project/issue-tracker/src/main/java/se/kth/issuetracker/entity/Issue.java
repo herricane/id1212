@@ -1,6 +1,5 @@
 package se.kth.issuetracker.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Data;
@@ -9,6 +8,7 @@ import lombok.NonNull;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.sql.Timestamp;
 
 @Data
@@ -34,7 +34,6 @@ public class Issue {
 
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH})
     @JoinColumn(name="user_id")
-//    @JsonBackReference
     private User user;
 
     @UpdateTimestamp
