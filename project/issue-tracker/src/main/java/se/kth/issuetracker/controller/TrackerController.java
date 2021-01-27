@@ -31,7 +31,7 @@ public class TrackerController {
         if (user == null) {
             return ResponseFactory.buildFailResponse();
         } else {
-            return ResponseFactory.buildSuccessResponse(username);
+            return ResponseFactory.buildSuccessResponse(user.getId());
         }
     }
 

@@ -77,10 +77,7 @@
 
       <template v-slot:append>
         <div align="center" class="pa-4">
-          <!-- <v-avatar color="white" size="55">
-            <v-icon color="teal darken-1"> mdi-exit-to-app </v-icon>
-          </v-avatar> -->
-          <v-btn fab dark outlined color="white" @click="exit">
+          <v-btn fab dark outlined color="white" @click="logout">
             <v-icon dark> mdi-exit-to-app </v-icon>
           </v-btn>
         </div>
@@ -89,7 +86,7 @@
 
     <v-main class="pa-0">
       <v-container>
-        <v-snackbar v-model="snackbar" :timeout="4000" top color="success">
+        <v-snackbar v-model="snackbar" :timeout="3000" top color="success">
           <span>Awesome! You added a new issue.</span>
           <v-btn depressed color="transparent" @click="snackbar = false">
             Close
@@ -97,7 +94,9 @@
         </v-snackbar>
 
         <v-row>
-          <h1 class="teal--text text--darken-4 pl-4">Board</h1>
+          <h1 class="teal--text text--darken-4 pl-4">
+            <span id="thisusername"></span>'s Board
+          </h1>
         </v-row>
 
         <v-row justify="center">
@@ -230,7 +229,9 @@ export default {
     };
   },
   mounted() {
-    this.getAllIssues();
+    // this.getAllIssues();
+    this.getUserIssues();
+    this.getUsername();
   },
   methods: {
     add() {
@@ -242,10 +243,11 @@ export default {
           description: this.issueForm.description,
           status: this.issueForm.status,
         })
-        .then(() => {
-          _this.$emit("issueAdded");
-        });
+        // .then(() => {
+        //   _this.$emit("issueAdded");
+        // });
       location.reload();
+      _this.$emit("issueAdded");
     },
     modify(id) {
       this.$axios.put("/issues/" + id, {
@@ -269,7 +271,22 @@ export default {
         this.issues = response.data;
       });
     },
-    exit() {
+    getUserIssues() {
+      var userId = window.sessionStorage.getItem("user")
+      this.$axios.get("/users/" + userId + "/issues").then((response) => {
+        this.issues = response.data;
+      })
+    },
+    getUsername() {
+      var userId = window.sessionStorage.getItem("user")
+      this.$axios.get("/users/" + userId).then((response) => {
+        document.getElementById("thisusername").innerText = response.data.username
+      })
+    },
+    logout() {
+      // this.$router.replace('/login')
+      var _this = this
+      _this.$store.commit('logout')
       this.$router.replace('/login')
     },
   },

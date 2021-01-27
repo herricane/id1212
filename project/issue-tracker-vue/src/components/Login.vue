@@ -65,24 +65,16 @@ export default {
             username: this.loginForm.username,
             password: this.loginForm.password
           })
-          .then(successResponse => {
-            if (successResponse.data.code === 200) {
-              _this.$store.commit('login', _this.loginForm)
+          .then(response => {
+            if (response.data.code === 200) {
+              _this.$store.commit('login', response.data.response)
               var path = this.$route.query.redirect
               this.$router.replace({path: path === '/' || path === undefined ? '/index' : path})
             } else {
               alert("Something went wrong... Try again.")
             }
           })
-      // .catch(failResponse => {
-      // })
     }
   }
 }
 </script>
-
-<!--<style>-->
-<!--  .login-form {-->
-<!--    width: 200px-->
-<!--  }-->
-<!--</style>-->
