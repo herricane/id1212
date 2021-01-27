@@ -280,7 +280,7 @@ export default {
     getUsername() {
       var userId = window.sessionStorage.getItem("user")
       this.$axios.get("/users/" + userId).then((response) => {
-        document.getElementById("thisusername").innerText = response.data.username
+        document.getElementById("thisusername").innerText = response.data.username.toUpperCase()
       })
     },
     logout() {
