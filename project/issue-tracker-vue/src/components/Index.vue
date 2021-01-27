@@ -77,9 +77,12 @@
 
       <template v-slot:append>
         <div align="center" class="pa-4">
-          <v-avatar color="white" size="55">
-            <v-icon color="teal darken-1"> mdi-account-circle </v-icon>
-          </v-avatar>
+          <!-- <v-avatar color="white" size="55">
+            <v-icon color="teal darken-1"> mdi-exit-to-app </v-icon>
+          </v-avatar> -->
+          <v-btn fab dark outlined color="white" @click="exit">
+            <v-icon dark> mdi-exit-to-app </v-icon>
+          </v-btn>
         </div>
       </template>
     </v-navigation-drawer>
@@ -206,7 +209,7 @@ export default {
       drawer: null,
       dialog: null,
       modifyDialog: [],
-      snackbar: true,
+      snackbar: false,
       issueForm: {
         title: "",
         description: "",
@@ -265,6 +268,9 @@ export default {
       this.$axios.get("/issues").then((response) => {
         this.issues = response.data;
       });
+    },
+    exit() {
+      this.$router.replace('/login')
     },
   },
 };

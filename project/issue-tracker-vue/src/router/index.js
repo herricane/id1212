@@ -19,7 +19,7 @@ export default new VueRouter({
       name: 'Index',
       component: Index,
       meta: {
-        requireAuth: false
+        requireAuth: true
       }
     },
     {
